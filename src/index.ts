@@ -1,16 +1,11 @@
+import './config';
 import express from 'express';
 import cors from 'cors';
 import * as bodyParser from 'body-parser';
-import * as path from 'path'
-import * as dotenv from 'dotenv';
 
 import routes from './api/routes/routes';
 import CustomError from './api/errors/errors';
-
-const envPath = path.resolve(__dirname, '../.env')
-dotenv.config({
-  path: envPath
-});
+import { sessionMiddleware, passportJWTMiddleware } from './api/routes/auth/auth_middleware';
 
 const app = express();
 
@@ -31,6 +26,7 @@ app.use((
     res.status(500).json({ message: "Unexpected Error Encountered." });
   }
 });
+app.use(sessionMiddleware);
 
 // Add routes
 app.use(routes);
